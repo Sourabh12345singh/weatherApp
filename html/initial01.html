@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name "viewport" content = "width = device-width, initial-scale = 1.0">
+    <title>Weather app</title>
+    <link rel="stylesheet" href="../css/initial01.css" />
+  </head>
+  <body>
+    <div class="card">
+      <div class="search">
+        <input type="text" placeholder="Enter city name " spellcheck="false" />
+        <button>
+          <img
+            src="../images/searchBar.svg"
+            alt="hello"
+            height="10"
+            width="30"
+          />
+        </button>
+      </div>
+
+        <div class="error">
+          <p>Invalid city name </p>
+        </div>
+
+      
+      <div class="weather">
+        <img
+          src="../images/rain.png"
+          class="weathericon"
+          alt="hello"
+          
+        />
+        <h1 class="temp">26°C</h1>
+        <h2 class="city">Gandhi Nagar</h2>
+        <div class = "details">
+            <div class = "col"> 
+                <img src = "../images/weather-app-img/images/humidity.png"
+                class = "icon01"
+                alt="hello">
+                <div>
+                    <p> Humidity</p>
+                    <p class = "humidity"> 50%</p>
+                    
+                </div>
+            </div>
+            
+            <div class = "col"> 
+                <img src = "../images/weather-app-img/images/wind.png"/
+                class = "icon02"
+                alt="hello"
+                >
+                <div >
+                  <p> Wind Speed </p>
+                    <p class = "wind"> 15 km/hr </p>
+                    
+                </div>
+            </div>
+        </div>  
+
+      </div>
+    </div>
+
+
+    <script>
+
+    const apikey = "3a05f2de69600dc5bc4948766ab2782e"
+    const apiurl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+    const searchbox = document.querySelector(".search input");
+    const searchbtn = document.querySelector(".search button");
+    const weathericon = document.querySelector(".weathericon");
+
+    async function checkweather(city) {
+        const response = await fetch(apiurl + city + `&appid=${apikey}`);
+
+        if(response.status==404){
+          document.querySelector(".error").style.display = "block";
+          document.querySelector(".weather").style.display = "none";
+        } else {
+  
+        var data = await response.json();
+
+        console.log(data);
+
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + " °C";
+        document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+        document.querySelector(".wind").innerHTML = data.wind.speed + " km/hr";
+
+        if(data.weather[0].main=="Clouds"){
+            weathericon.src = "../images/weather-app-img/images/clouds.png"
+        }
+        else if(data.weather[0].main=="Clear"){
+            weathericon.src = "../images/weather-app-img/images/clear.png"
+        }
+        else if(data.weather[0].main=="Drizzle"){
+            weathericon.src = "../images/weather-app-img/images/drizzle.png"
+        }
+        // else if(data.weather[0].main=="Humidity"){
+        //     weather.src = "../images/weather-app-img/images/humidity.png"
+        // }
+        else if(data.weather[0].main=="Mist"){
+            weathericon.src = "../images/weather-app-img/images/mist.png"
+        }
+        else if(data.weather[0].main=="Rain"){
+            weathericon.src = "../images/weather-app-img/images/rain.png"
+        }
+        else if(data.weather[0].main=="snow"){
+            weathericon.src = "../images/weather-app-img/images/snow.png"
+        }
+        
+        document.querySelector(".weather").style.display = "block";
+        document.querySelector(".error").style.display = "none";
+
+    }}
+
+    searchbtn.addEventListener("click", ()=>{
+        checkweather(searchbox.value);
+    })
+
+    
+    </script>
+  </body>
+</html>
